@@ -1,3 +1,5 @@
+library(httr)
+library(XML)
 library(dplyr)
 library(jsonlite)
 
@@ -8,16 +10,21 @@ print(apuracao$atualizacao$apuracao_total)
 municipios <- apuracao$municipios
 
 apuracaoMunicipio <- NULL
-for (municipio in municipios) {
-    c <- municipio$c 
-    c$Municipio <- municipio$nm
-    c$v <- gsub("\\.", "", c$v)
-    c$v <- as.numeric(c$v)
-    c$Total <- sum(c$v)
-    if (is.null(apuracaoMunicipio)) {
-        apuracaoMunicipio <- c
-    } else {
-        apuracaoMunicipio <- do.call(rbind, list(apuracaoMunicipio, c))
+codigosIbge <- attributes(municipios)
+for (codigoIbge in codigosIbge$names) {
+    if (codigoIbge != "") {
+        municipio <- municipios[[codigoIbge]]
+        c <- municipio$c 
+        c$CodigoIbge <- codigoIbge
+        c$Municipio <- municipio$nm
+        c$v <- gsub("\\.", "", c$v)
+        c$v <- as.numeric(c$v)
+        c$Total <- sum(c$v)
+        if (is.null(apuracaoMunicipio)) {
+            apuracaoMunicipio <- c
+        } else {
+            apuracaoMunicipio <- do.call(rbind, list(apuracaoMunicipio, c))
+        }
     }
 }
 
