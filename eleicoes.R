@@ -28,6 +28,12 @@ for (codigoIbge in codigosIbge$names) {
     }
 }
 
+municipios <- read.csv("municipios.csv", row.names = NULL, sep = ";")
+municipios <- municipios[, c(4,5)]
+colnames(municipios) <- c("UF", "CodigoIbge")
+
+apuracaoMunicipio <- merge(apuracaoMunicipio, municipios)
+
 apuracaoMunicipio <- mutate(apuracaoMunicipio, Perc = v / Total)
 apuracaoMunicipio <- arrange(apuracaoMunicipio, desc(Perc))
 
